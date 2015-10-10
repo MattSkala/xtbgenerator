@@ -5,6 +5,7 @@ import com.google.javascript.jscomp.JsMessage;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.RuntimeException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,6 +37,11 @@ abstract class XtbWriter {
         Iterator<JsMessage> iterator = messages.values().iterator();
         while (iterator.hasNext()) {
             JsMessage message = iterator.next();
+
+            if (message.getDesc() == null) {
+                throw new RuntimeException("Message desc cannot be empty: " + message.getKey() + " in " + message.getSourceName());
+            }
+
             writer.append(
                 INDENT +
                 "<translation id=\"" + message.getId() + "\" " +
